@@ -7,7 +7,7 @@ import session from 'express-session';
 import mongoose from 'mongoose';
 
 import commonRoutes from './commonRoutes';
-const log = (msg: string) => {process.stdout.write(msg)}
+// const log = (msg: string) => {process.stdout.write(msg)}
 const sensitiveRoutes = require('./router/index');
 
 const app = express();
