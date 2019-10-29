@@ -1,14 +1,17 @@
 {
   "name": "website-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "git",
+  "private": true,
   "main": "app.js",
   "scripts": {
     "start": "npm run build && npm run serve",
     "serve": "node dist/app.js",
     "build": "npm run build-ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-ts": "tsc -p typescript.json"
+    "build-ts": "tsc -p typescript.json",
+        "build-test": "tsc ./src/app.ts",
+        "start-pro": "npm run serve"
   },
   "author": "",
   "license": "ISC",
