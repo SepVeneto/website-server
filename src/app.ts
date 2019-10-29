@@ -58,5 +58,5 @@ app.use(sensitiveRoutes);
 
 app.listen(3000, function() {
 	console.log('listen at 3000');
-	log('listen at 3000');
+	// log('listen at 3000');
 });
