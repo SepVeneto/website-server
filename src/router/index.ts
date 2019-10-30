@@ -49,20 +49,15 @@ router.get('/article/getArticles', async (req, res) => {
     total = count;
     return true;
   });
-  await Article.find(query, null, {skip, limit }, (err, article) => {
+  await Article.find(query, null, {skip, limit, lean: true}, (err, article) => {
 
   // Article.find((err, article) => {
     if (err) {
       response(res);
     }
-    let temp: Array<ArticleDocument> = [];
     article.forEach(item => {
-      const col = (item.columns as Array<string>).join(',');
-      item.columns = col;
-      item.test = col;
-      temp[0] = ({columns: col} as ArticleDocument);
+      item.columns = (item.columns as Array<string>).join(',');
     })
-    console.log(temp[0]);
     const result = {
       total,
       list: article,
