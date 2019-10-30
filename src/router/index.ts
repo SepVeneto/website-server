@@ -60,11 +60,11 @@ router.get('/article/getArticles', async (req, res) => {
       item.columns = col;
       item.test = col;
     })
-    console.log(article[0].test)
     const result = {
       total,
       list: article,
     }
+    console.log(JSON.stringify(result));
     response(res, 200, 200, '查询成功', result);
   })
 })
