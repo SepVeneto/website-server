@@ -97,7 +97,7 @@ router.post('/upload/image', function(req, res) {
 	res.end(JSON.stringify({code: 200, location:'/static/image/test.png'}));
 });
 
-router.post('/article/getColumns', function(req, res) {
+router.get('/article/getColumns', function(req, res) {
   Columns.find((err, column) => {
     if (err) {
       response(res);
