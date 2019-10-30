@@ -55,9 +55,6 @@ router.get('/article/getArticles', async (req, res) => {
     if (err) {
       response(res);
     }
-    article.forEach(item => {
-      item.columns = (item.columns as Array<string>).join(',');
-    })
     const result = {
       total,
       list: article,
