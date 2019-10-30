@@ -55,7 +55,7 @@ router.get('/article/getArticles', async (req, res) => {
     if (err) {
       response(res);
     }
-    const temp = {...article}
+    const temp = [...article];
     temp.forEach(item => {
       const col = (item.columns as Array<string>).join(',');
       item.columns = col;
