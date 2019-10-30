@@ -55,10 +55,11 @@ router.get('/article/getArticles', async (req, res) => {
     if (err) {
       response(res);
     }
-    article.forEach(item => {
+    const temp = article;
+    temp.forEach(item => {
       const col = (item.columns as Array<string>).join(',');
       console.log(col);
-      item.columns = '123';
+      item.columns = col;
       console.log(item.columns);
     })
     const result = {
