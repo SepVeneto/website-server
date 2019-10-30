@@ -55,18 +55,18 @@ router.get('/article/getArticles', async (req, res) => {
     if (err) {
       response(res);
     }
-    const temp = [...article];
-    temp.forEach(item => {
+    let temp: Array<ArticleDocument> = [];
+    article.forEach(item => {
       const col = (item.columns as Array<string>).join(',');
       item.columns = col;
       item.test = col;
+      temp[0] = ({columns: col} as ArticleDocument);
     })
-    console.log(JSON.stringify(temp));
+    console.log(temp[0]);
     const result = {
       total,
-      list: temp,
+      list: article,
     }
-    console.log(JSON.stringify(result));
     response(res, 200, 200, '查询成功', result);
   })
 })
