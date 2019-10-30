@@ -87,7 +87,7 @@ router.post('/upload/article', function(req, res) {
   if (id) {
     Article.update({_id: id}, {
       ...req.body,
-      updateAt: new Date().toLocaleString('chinese', {hour12: false}),
+      updateAt: Date.now(),
     }, err => {
       if (err) {
         response(res);
