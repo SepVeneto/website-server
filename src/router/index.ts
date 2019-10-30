@@ -72,6 +72,15 @@ router.get('/article', function(req, res) {
     response(res, 200, 200, '查询成功', {data: article});
   })
 })
+router.delete('/article', function(req, res) {
+  const {id} = req.query;
+  Article.deleteOne({_id: id}, err => {
+    if (err) {
+      response(res);
+    }
+    response(res, 200, 200, '删除成功', '');
+  })
+})
 
 router.post('/upload/article', function(req, res) {
   const id = req.body.id;
