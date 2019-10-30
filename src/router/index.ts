@@ -61,6 +61,7 @@ router.get('/article/getArticles', async (req, res) => {
       item.columns = col;
       item.test = col;
     })
+    console.log(JSON.stringify(temp));
     const result = {
       total,
       list: temp,
