@@ -58,11 +58,11 @@ router.get('/article/getArticles', async (req, res) => {
     article.forEach(item => {
       item.columns = (item.columns as Array<string>).join(',');
     })
+    console.log(article[0].columns)
     const result = {
       total,
       list: article,
     }
-    console.log(result.total);
     response(res, 200, 200, '查询成功', result);
   })
 })
