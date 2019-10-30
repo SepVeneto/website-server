@@ -11,7 +11,7 @@ export type ArticleDocument = mongoose.Document & {
 
 const articleSchema = new mongoose.Schema({
   title: { type: String, require: true },
-  columns: { type: Array, require: true},
+  columns: { type: String, require: true},
   author: { type: String, require: true},
   content: { type: String, require: true },
   createAt: {type: Date, default: Date.now()},
