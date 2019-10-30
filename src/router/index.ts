@@ -102,7 +102,7 @@ router.post('/upload/article', function(req, res) {
 });
 router.post('/upload/image', function(req, res) {
 	console.log(req.session);
-	fs.writeFile(`${process.cwd()}/static/image/test.png`, req.body.base64, 'base64', (error)=> {
+	fs.writeFile(`${process.cwd()}/dist/static/image/test.png`, req.body.base64, 'base64', (error)=> {
 		error ? console.log('fail', error) : console.log('success');
 	});
 	res.end(JSON.stringify({code: 200, location:'/static/image/test.png'}));
