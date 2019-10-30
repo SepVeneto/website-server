@@ -59,6 +59,7 @@ router.get('/article/getArticles', async (req, res) => {
       const col = (item.columns as Array<string>).join(',');
       console.log(col);
       item.columns = col;
+      console.log(item.columns);
     })
     const result = {
       total,
