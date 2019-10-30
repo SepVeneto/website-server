@@ -56,9 +56,10 @@ router.get('/article/getArticles', async (req, res) => {
       response(res);
     }
     article.forEach(item => {
+      console.log(item.columns)
       item.columns = (item.columns as Array<string>).join(',');
+      console.log(item.columns)
     })
-    console.log(article[0].columns)
     const result = {
       total,
       list: article,
