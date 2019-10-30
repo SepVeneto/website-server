@@ -1,6 +1,7 @@
 import express from 'express';
 import fs from 'fs';
 import { Article, ArticleDocument } from '../models/article';
+import {Columns, ColumnsDocument } from '../models/columns';
 import { response } from '../utils';
 
 const router = express.Router();
@@ -95,5 +96,14 @@ router.post('/upload/image', function(req, res) {
 	});
 	res.end(JSON.stringify({code: 200, location:'/static/image/test.png'}));
 });
+
+router.post('/article/getColumns', function(req, res) {
+  Columns.find((err, column) => {
+    if (err) {
+      response(res);
+    }
+    response(res, 200, 200, '查询成功', column);
+  })
+})
 
 module.exports = router;
