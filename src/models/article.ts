@@ -5,8 +5,8 @@ export type ArticleDocument = mongoose.Document & {
   columns: Array<string> | string,
   author: string,
   content: string,
-  createAt: Date,
-  updateAt: Date,
+  createAt: string,
+  updateAt: string,
 };
 
 const articleSchema = new mongoose.Schema({
@@ -14,14 +14,14 @@ const articleSchema = new mongoose.Schema({
   columns: { type: Array, require: true},
   author: { type: String, require: true},
   content: { type: String, require: true },
-  createAt: {type: Date, default: Date.now()},
-  updateAt: { type: Date },
+  createAt: {type: String, default: new Date().toLocaleString('chinese', {hour12: false})},
+  updateAt: { type: String},
 })
 
 articleSchema.pre('save', function save(next) {
   console.log('update time');
   const article = this as ArticleDocument;
-  article.updateAt = new Date();
+  article.updateAt = new Date().toLocaleString('chinese', {hour12: false});
   next();
 })
 
