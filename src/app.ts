@@ -27,7 +27,7 @@ app.use(logger('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use('/static', express.static(publicPath));
-console.log(publicPath);
+console.log('publicPath: ', publicPath);
 app.all('*', function(req: Request, res: Response, next: NextFunction) {
 	req.get('Origin')
 	res.header('Access-Control-Allow-Origin', '*');
