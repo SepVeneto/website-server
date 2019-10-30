@@ -19,7 +19,6 @@ const articleSchema = new mongoose.Schema({
 })
 
 articleSchema.pre('save', function save(next) {
-  console.log('update time');
   const article = this as ArticleDocument;
   article.updateAt = new Date().toLocaleString('chinese', {hour12: false});
   next();
