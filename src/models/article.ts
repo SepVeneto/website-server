@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 export type ArticleDocument = mongoose.Document & {
   title: string,
-  columns: Array<string>,
+  columns: Array<string> | string,
   author: string,
   content: string,
   createAt: Date,
