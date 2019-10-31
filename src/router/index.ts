@@ -105,7 +105,7 @@ router.post('/upload/image', function(req, res) {
 	fs.writeFile(`static/image/test.png`, req.body.base64, 'base64', (error)=> {
 		error ? console.log('fail', error) : console.log('success');
 	});
-	res.end(JSON.stringify({code: 200, location:'/static/image/test.png'}));
+	res.end(JSON.stringify({code: 200, location:'static/image/test.png'}));
 });
 
 router.get('/article/getColumns', function(req, res) {
