@@ -3,6 +3,8 @@ import fs from 'fs';
 import { Article, ArticleDocument } from '../models/article';
 import {Columns, ColumnsDocument } from '../models/columns';
 import { response } from '../utils';
+import { finished } from 'stream';
+import { User } from '../models/User';
 
 const router = express.Router();
 
@@ -13,15 +15,26 @@ router.get('/user/logout', (req, res) => {
 	})
 });
 router.get('/user/info', function(req, res) {
-	console.log(req.session.username);
-  res.end(JSON.stringify({
-    code: 200,
-    data: {
-      name: 'qez',
-      roles: ['admin']
-    },
-    update:'success'
-  }))
+  console.log(req.session.username);
+  const {username} = req.session;
+  User.findOne({username}, (err, user) => {
+    if (err) {
+      response(res);
+      console.log(err);
+    }
+    const result = {
+      roles: user.roles,
+    };
+    response(res, 200, 200, '查询成功', result);
+  })
+  // res.end(JSON.stringify({
+  //   code: 200,
+  //   data: {
+  //     name: 'qez',
+  //     roles: ['admin']
+  //   },
+  //   update:'success'
+  // }))
 });
 router.get('/article/getArticles', async (req, res) => {
   interface Query {

@@ -26,10 +26,10 @@ router.post('/user/login', (req, res) => {
 				console.log('enter')
 				response(res, 200, 403, '用户名或密码错误', {});
 			} else {
-				const result = {
-					roles: user.roles
-				};
-				response(res, 200, 200, '登录成功', result);
+				// const result = {
+				// 	roles: user.roles
+				// };
+				response(res, 200, 200, '登录成功', {});
 			}
 		})
 	} catch(err) {
