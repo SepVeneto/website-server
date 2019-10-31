@@ -11,11 +11,10 @@ function encryption(password: string) :string {
 	md5.update(unencryptedString);
 	return md5.digest('hex');
 }
-
 router.post('/user/login', (req, res) => {
   const {username, password} = req.body;
 	req.session.username = username;
-	console.log(res);
+	console.log(res.header);
 	const encryptePaw = encryption(password);
 	try {
 		User.findOne({username, password: encryptePaw}, (err, user) => {
