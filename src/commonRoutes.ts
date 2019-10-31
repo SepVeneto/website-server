@@ -1,15 +1,30 @@
 import express from 'express';
+import crypto from 'crypto';
 import { User, UserDocument } from './models/User';
+import {response} from '../utils';
 
 const router = express.Router();
+function encryption(password: string) :string {
+	const md5 = crypto.createHash('md5');
+	const salt = 'veneto';
+	const unencryptedString = salt + md5;
+	md5.update(unencryptedString);
+	return md5.digest('hex');
+}
 
 router.post('/user/login', (req, res) => {
   const {username, password} = req.body;
-  req.session.username = username;
-  res.json({
-    code: 200,
-    roles: ['admin'],
-  })
+	req.session.username = username;
+	const encryptePaw = encryption(password);
+	User.findOne({username, password: encryptePaw}, (err, user) => {
+		if (err) {
+			response(res);
+		}
+		const result = {
+			roles: user.roles
+		};
+		response(res, 200, 200, '登录成功', result);
+	})
 })
 router.post('/user/signup', (req, res, next) => {
 	const {username, password} = req.body;
@@ -24,7 +39,8 @@ router.post('/user/signup', (req, res, next) => {
 			})
 		}
 		const newUser = new User({
-			username, password
+			username, 
+			password: encryption(password),
 		});
 		newUser.save(next);
 	})

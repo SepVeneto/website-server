@@ -3,12 +3,14 @@ import mongoose from 'mongoose';
 export type UserDocument = mongoose.Document & {
   username: string,
   password: string,
+  roles: string,
   createAt: Date,
 
 }
 const userSchema = new mongoose.Schema({
   username: { type: String, require: true, unique: true},
   password: {type: String, require: true},
+  roles: {type: String, default: 'editor'},
   createAt: {type: Date, default: Date.now},
 })
 
