@@ -20,6 +20,10 @@ router.post('/user/login', (req, res) => {
 		if (err) {
 			response(res);
 		}
+		console.log(user);
+		if (!user) {
+			response(res, 200, 403, '用户名或密码错误', {});
+		}
 		const result = {
 			roles: user.roles
 		};
