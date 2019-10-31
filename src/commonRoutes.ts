@@ -14,7 +14,7 @@ function encryption(password: string) :string {
 router.post('/user/login', (req, res) => {
   const {username, password} = req.body;
 	req.session.username = username;
-	console.log(req.session.cookie);
+	console.log(req.cookies);
 	const encryptePaw = encryption(password);
 	try {
 		User.findOne({username, password: encryptePaw}, (err, user) => {
@@ -29,7 +29,7 @@ router.post('/user/login', (req, res) => {
 				// const result = {
 				// 	roles: user.roles
 				// };
-				response(res, 200, 200, '登录成功', {});
+				response(res, 200, 200, '登录成功', {token: req.sessionID});
 			}
 		})
 	} catch(err) {
