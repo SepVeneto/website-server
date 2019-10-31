@@ -26,6 +26,7 @@ app.use(session({
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use('/static', express.static(publicPath));
 app.all('*', function(req: Request, res: Response, next: NextFunction) {
 	req.get('Origin')
 	res.header('Access-Control-Allow-Origin', '*');
@@ -53,7 +54,6 @@ app.all('*', (req: Request, res: Response, next) => {
 		next();
 	}
 })
-app.use('/static', express.static(publicPath));
 app.use(sensitiveRoutes);
 
 app.listen(3000, function() {
