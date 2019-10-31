@@ -16,19 +16,25 @@ router.post('/user/login', (req, res) => {
   const {username, password} = req.body;
 	req.session.username = username;
 	const encryptePaw = encryption(password);
-	User.findOne({username, password: encryptePaw}, (err, user) => {
-		if (err) {
-			response(res);
-		}
-		console.log(user);
-		if (!user) {
-			response(res, 200, 403, '用户名或密码错误', {});
-		}
-		const result = {
-			roles: user.roles
-		};
-		response(res, 200, 200, '登录成功', result);
-	})
+	try {
+		User.findOne({username, password: encryptePaw}, (err, user) => {
+			if (err) {
+				response(res);
+			}
+			console.log(user);
+			if (!user) {
+				console.log('enter')
+				response(res, 200, 403, '用户名或密码错误', {});
+			}
+			const result = {
+				roles: user.roles
+			};
+			response(res, 200, 200, '登录成功', result);
+		})
+	} catch(err) {
+		response(res);
+		console.error(err);
+	}
 })
 router.post('/user/signup', (req, res, next) => {
 	const {username, password} = req.body;
