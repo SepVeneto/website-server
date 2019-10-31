@@ -14,7 +14,7 @@ function encryption(password: string) :string {
 router.post('/user/login', (req, res) => {
   const {username, password} = req.body;
 	req.session.username = username;
-	console.log(res.header);
+	console.log(req.session.cookie);
 	const encryptePaw = encryption(password);
 	try {
 		User.findOne({username, password: encryptePaw}, (err, user) => {
