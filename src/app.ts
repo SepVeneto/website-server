@@ -21,7 +21,7 @@ app.use(session({
 	secret: 'salt',
 	resave: false,
 	saveUninitialized: true,
-	cookie: { maxAge: 600000},
+	cookie: { maxAge: 600000, sameSite: 'Lax'},
 }));
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
