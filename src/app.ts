@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 app.use('/static', express.static(publicPath));
 app.all('*', function(req: Request, res: Response, next: NextFunction) {
 	req.get('Origin')
-	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Origin', '127.0.0.1');
 	res.header('Access-Control-Allow-Headers', '*');
 	res.header('Access-Control-Allow-Methods', '*');
 	// res.header('Content-Type', 'application/json;charset=UTF-8');
