@@ -1,7 +1,7 @@
 import express from 'express';
 import crypto from 'crypto';
 import { User, UserDocument } from './models/User';
-import {response} from '../utils';
+import {response} from './utils';
 
 const router = express.Router();
 function encryption(password: string) :string {
