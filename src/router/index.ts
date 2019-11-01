@@ -130,4 +130,13 @@ router.get('/article/getColumns', function(req, res) {
   })
 })
 
+router.get('/columns', function(req, res) {
+  Columns.find((err, column) => {
+    if (err) {
+      response(res);
+    }
+    response(res, 200, 200, '查询成功', column);
+  })
+})
+
 module.exports = router;
