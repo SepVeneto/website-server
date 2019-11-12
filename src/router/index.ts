@@ -27,14 +27,6 @@ router.get('/user/info', function(req, res) {
     };
     response(res, 200, 200, '查询成功', result);
   })
-  // res.end(JSON.stringify({
-  //   code: 200,
-  //   data: {
-  //     name: 'qez',
-  //     roles: ['admin']
-  //   },
-  //   update:'success'
-  // }))
 });
 router.get('/article/getArticles', async (req, res) => {
   interface Query {
