@@ -25,7 +25,7 @@ router.get('/user/info', function(req, res) {
     const result = {
       roles: user.roles,
     };
-    response(res, 200, 200, '查询成功', result);
+    response(res, 200, 200, '查询成功', user);
   })
 });
 router.get('/article/getArticles', async (req, res) => {
