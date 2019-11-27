@@ -131,4 +131,8 @@ router.get('/columns', function(req, res) {
   })
 })
 
+router.post('/columns', function(req, res) {
+  console.log(req.session.username);
+})
+
 module.exports = router;
