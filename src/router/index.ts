@@ -132,7 +132,16 @@ router.get('/columns', function(req, res) {
 })
 
 router.post('/columns', function(req, res) {
-  console.log(req.session.username);
+  const { username } = req.session;
+  const {value, color} = req.body;
+  User.findOne({username}, (err, user) => {
+    err && response(res);
+    Object.assign(user.config, {[value]: color});
+    User.findOneAndUpdate({username}, user, (error, result) => {
+      error && response(res);
+      response(res, 200, 200, '修改成功', result);
+    })
+  })
 })
 
 module.exports = router;
