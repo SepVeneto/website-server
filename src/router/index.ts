@@ -137,10 +137,10 @@ router.post('/columns', function(req, res) {
   User.findOne({username}, (err, user) => {
     err && response(res);
     Object.assign(user.config, {[value]: color});
-    User.findOneAndUpdate({username}, user, (error, result) => {
+    const result = User.findOneAndUpdate({username}, user, (error) => {
       error && response(res);
-      response(res, 200, 200, '修改成功', result);
     })
+    response(res, 200, 200, '修改成功', result);
   })
 })
 
