@@ -139,9 +139,8 @@ router.post('/columns', function(req, res) {
     Object.assign(user.config, {[value]: color});
     const result = User.findOneAndUpdate({username}, user, (error) => {
       error && response(res);
+      response(res, 200, 200, '修改成功', user);
     })
-    console.log(result);
-    // response(res, 200, 200, '修改成功', result);
   })
 })
 
