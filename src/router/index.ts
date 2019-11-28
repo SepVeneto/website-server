@@ -140,7 +140,8 @@ router.post('/columns', function(req, res) {
     const result = User.findOneAndUpdate({username}, user, (error) => {
       error && response(res);
     })
-    response(res, 200, 200, '修改成功', result);
+    console.log(result);
+    // response(res, 200, 200, '修改成功', result);
   })
 })
 
