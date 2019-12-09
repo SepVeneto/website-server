@@ -146,4 +146,32 @@ router.post('/columns', function(req, res) {
   })
 })
 
+router.get('/users', async function(req, res) {
+  interface Query {
+    username ?: String,
+  };
+  const {page, pageSize, ...conditions} = req.query;
+  const query: Query = {};
+  for (let key in conditions) {
+    conditions[key] && (query[key] = new RegExp(`${conditions[key]}`));
+  }
+  const skip = (page - 1) * pageSize;
+  const limit = skip + parseInt(pageSize)
+  let total = 0;
+  await User.countDocuments(query, (err, count) => {
+    if (err) {
+      response(res);
+      return false;
+    }
+    total = count;
+    return true;
+  })
+  await User.find(query, null, {skip, limit, lean: true}, (err, user) => {
+    if (err) {
+      response(res);
+    }
+    response(res, 200, 200, '查询成功', user);
+  })
+})
+
 module.exports = router;
