@@ -24,8 +24,10 @@ router.get('/user/info', function(req, res) {
     }
     const result = {
       roles: user.roles,
+      config: user.config,
+      username: user.username
     };
-    response(res, 200, 200, '查询成功', user);
+    response(res, 200, 200, '查询成功', result);
   })
 });
 router.get('/article/getArticles', async (req, res) => {
