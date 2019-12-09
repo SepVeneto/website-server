@@ -148,7 +148,8 @@ router.post('/columns', function(req, res) {
 
 router.get('/users', async function(req, res) {
   interface Query {
-    username ?: String,
+    username ?: RegExp,
+    [key: string]: RegExp,
   };
   const {page, pageSize, ...conditions} = req.query;
   const query: Query = {};
