@@ -6,20 +6,25 @@ import fs from 'fs';
 import session from 'express-session';
 import mongoose from 'mongoose';
 
+import graphqlHTTP from 'express-graphql'
+
 import commonRoutes from './commonRoutes';
+import {typeDef, resolvers} from './schema';
+import Schema from './schema';
 // const log = (msg: string) => {process.stdout.write(msg)}
 const sensitiveRoutes = require('./router/index');
 
 const app = express();
 const publicPath = path.resolve(__dirname, 'static');
 import {Response, Request, NextFunction} from 'express';
-mongoose.connect('mongodb://localhost:27017/test', {
+mongoose.connect('mongodb://localhost:27017/website-server', {
 	useNewUrlParser: true,
 	useUnifiedTopology: true
 });
 app.use(session({
 	secret: 'salt',
 	resave: false,
+	name: 'name',
 	saveUninitialized: true,
 	cookie: { maxAge: 600000},
 }));
@@ -27,6 +32,10 @@ app.use(logger('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use('/static', express.static(publicPath));
+app.use('/graphql', graphqlHTTP({
+	schema: Schema,
+	graphiql: true,
+}))
 app.all('*', function(req: Request, res: Response, next: NextFunction) {
 	req.get('Origin')
 	res.header('Access-Control-Allow-Origin', '*');
@@ -45,8 +54,8 @@ app.all('*', function(req: Request, res: Response, next: NextFunction) {
 app.use(commonRoutes);
 
 app.all('*', (req: Request, res: Response, next) => {
-	console.log(req.session.username)
-	if (!req.session.username) {
+	console.log(req.session)
+	if (!req.session.id) {
 		res.json({
 			code: 403
 		})

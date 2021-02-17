@@ -5,6 +5,22 @@ import {Columns, ColumnsDocument } from '../models/columns';
 import { response } from '../utils';
 import { finished } from 'stream';
 import { User } from '../models/User';
+import { GraphQLID, GraphQLObjectType, GraphQLString, graphql } from 'graphql'
+import graphqlHTTP from 'express-graphql'
+import { typeDef, resolvers } from '../schema';
+import Schema from '../schema';
+
+const ArticleList = new GraphQLObjectType({
+  name: 'List',
+  fields: {
+    _id: {
+      type: GraphQLID,
+    },
+    title: {
+      type: GraphQLString,
+    }
+  }
+})
 
 const router = express.Router();
 
@@ -15,12 +31,14 @@ router.get('/user/logout', (req, res) => {
 	})
 });
 router.get('/user/info', function(req, res) {
-  console.log(req.session.username);
   const {username} = req.session;
+  if (!username) {
+    response(res, 200, 403, '登录过期', {});
+    return;
+  }
   User.findOne({username}, (err, user) => {
-    if (err) {
+    if (err || !user) {
       response(res);
-      console.log(err);
     }
     const result = {
       roles: user.roles,
@@ -45,8 +63,8 @@ router.get('/article/getArticles', async (req, res) => {
       query[key] = new RegExp(`${conditions[key]}`);
     }
   }
-  const skip = (page-1) * pageSize;
-  const limit = skip + parseInt(pageSize);
+  const skip = (Number(page) -1) * Number(pageSize);
+  const limit = skip + parseInt(pageSize as string);
   let total = 0;
   await Article.countDocuments(query, (err, count) => {
     if (err) {
@@ -76,7 +94,7 @@ router.get('/article', function(req, res) {
     if (err) {
       response(res);
     }
-    response(res, 200, 200, '查询成功', {data: article});
+    response(res, 200, 200, '查询成功', article);
   })
 })
 router.delete('/article', function(req, res) {
@@ -90,7 +108,7 @@ router.delete('/article', function(req, res) {
 })
 
 router.post('/upload/article', function(req, res) {
-  const id = req.body.id;
+  const id = req.body._id;
   if (id) {
     Article.update({_id: id}, {
       ...req.body,
@@ -124,26 +142,79 @@ router.get('/article/getColumns', function(req, res) {
   })
 })
 
-router.get('/columns', function(req, res) {
-  Columns.find((err, column) => {
+router.post('/columns/list', function(req, res) {
+  console.log('request: ', req.body)
+  graphql(Schema, req.body.query).then(({ data })=>
+    response(res, 200, 200, '查询成功', data.getColumns)
+  )
+  // console.log('req:', req)
+  // graphqlHTTP({ schema })(req, res).then(data => console.log('data:', data));
+  // response(res, 200, 200, '查询成功', column);
+  // Columns.find((err, column) => {
+  //   if (err) {
+  //     response(res);
+  //   }
+  //   response(res, 200, 200, '查询成功', column);
+  // })
+})
+
+router.get('/columns/list', async (req, res) => {
+  interface Query {
+    title?: RegExp,
+    author?: RegExp,
+    columns?: RegExp,
+    [key: string]: RegExp,
+  };
+  const {page, pageSize, ...conditions}= req.query;
+  // const {title, author, columns} = JSON.parse(conditions);
+  const query: Query = {};
+  for (let key in conditions) {
+    if (conditions[key]) {
+      query[key] = new RegExp(`${conditions[key]}`);
+    }
+  }
+  const skip = (Number(page) -1) * Number(pageSize);
+  const limit = skip + parseInt(pageSize as string);
+  let total = 0;
+  await Columns.countDocuments(query, (err, count) => {
+    if (err) {
+      response(res);
+      return false;
+    }
+    total = count;
+    return true;
+  });
+  await Columns.find(query, null, {skip, limit, lean: true}, (err, article) => {
+
+  // Article.find((err, article) => {
     if (err) {
       response(res);
     }
-    response(res, 200, 200, '查询成功', column);
+    const result = {
+      total,
+      list: article,
+    }
+    response(res, 200, 200, '查询成功', result);
   })
 })
 
 router.post('/columns', function(req, res) {
-  const { username } = req.session;
-  const {value, color} = req.body;
-  User.findOne({username}, (err, user) => {
-    err && response(res);
-    Object.assign(user.config, {[value]: color});
-    const result = User.findOneAndUpdate({username}, user, (error) => {
-      error && response(res);
-      response(res, 200, 200, '修改成功', user);
+  const {_id} = req.body;
+  if (_id) {
+    Columns.update({_id}, {
+      ...req.body,
+      updateAt: Date.now(),
+    }, err => {
+      if (err) {
+        response(res);
+      }
+      response(res, 200, 200, '修改成功');
     })
-  })
+  } else {
+    const newColumn = new Columns({...req.body });
+    newColumn.save();
+    response(res, 200, 200, '创建成功');
+  }
 })
 
 router.get('/users', async function(req, res) {
@@ -156,8 +227,8 @@ router.get('/users', async function(req, res) {
   for (let key in conditions) {
     conditions[key] && (query[key] = new RegExp(`${conditions[key]}`));
   }
-  const skip = (page - 1) * pageSize;
-  const limit = skip + parseInt(pageSize)
+  const skip = (Number(page) - 1) * Number(pageSize);
+  const limit = skip + parseInt(pageSize as string)
   let total = 0;
   await User.countDocuments(query, (err, count) => {
     if (err) {

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.response = void 0;
 function response(res, httpCode = 500, code = 381, message = "服务端异常", data = {}) {
     const responseData = {
         code,
