@@ -5,16 +5,16 @@ import {response} from './utils';
 
 const router = express.Router();
 function encryption(password: string) :string {
-	const md5 = crypto.createHash('md5');
 	const salt = 'veneto';
-	const unencryptedString = salt + md5;
-	md5.update(unencryptedString);
+	const md5 = crypto.createHmac('sha256', salt);
+	// const unencryptedString = salt + md5;
+	md5.update(password);
 	return md5.digest('hex');
 }
 router.post('/user/login', (req, res) => {
   const {username, password} = req.body;
 	req.session.username = username;
-	console.log(req.cookies);
+	// console.log(req.cookies);
 	const encryptePaw = encryption(password);
 	try {
 		User.findOne({username, password: encryptePaw}, (err, user) => {
@@ -39,22 +39,19 @@ router.post('/user/login', (req, res) => {
 })
 router.post('/user/signup', (req, res, next) => {
 	const {username, password} = req.body;
-	console.log(username, password)
 	User.findOne({ username }, (err, user) => {
 		if (err) {
 			return next(err);
 		}
 		if (user) {
-			return res.json({
-				code: 200,
-				message: '用户已存在',
-			})
+			response(res, 200, 200, '用户已存在');
 		}
 		const newUser = new User({
 			username, 
 			password: encryption(password),
 		});
 		newUser.save(next);
+		response(res, 200, 200, '注册成功');
 	})
 })
 

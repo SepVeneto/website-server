@@ -7,20 +7,24 @@ exports.typeDef = graphql_1.buildSchema(`
   type getColumns {
     _id: ID,
     name: String,
+    color: String,
   }
 `);
 exports.resolvers = {
     getColumns: (parent, args, context, info) => {
-        console.log(parent, args, context, info);
-        const res = columns_1.Columns.find({});
+        console.log('getColumns', parent, args, context, info);
+        console.log(':16', args);
+        const res = columns_1.Columns.find({ name: { $in: [args.name] } });
+        console.log(':18 res', res);
         return res;
     }
 };
-const LaunchType = new graphql_1.GraphQLObjectType({
-    name: 'Launch',
+const columns = new graphql_1.GraphQLObjectType({
+    name: 'columns',
     fields: () => ({
         _id: { type: graphql_1.GraphQLID },
         name: { type: graphql_1.GraphQLString },
+        color: { type: graphql_1.GraphQLString },
     })
 });
 // const RocketType = new GraphQLObjectType({
@@ -35,9 +39,13 @@ const RootQuery = new graphql_1.GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
         getColumns: {
-            type: new graphql_1.GraphQLList(LaunchType),
+            type: new graphql_1.GraphQLList(columns),
+            args: {
+                name: { type: graphql_1.GraphQLString }
+            },
             resolve(parent, args) {
-                return columns_1.Columns.find({});
+                const res = columns_1.Columns.find({ name: new RegExp(args.name, 'i') });
+                return res;
             }
         }
     }

@@ -21,8 +21,28 @@ const ArticleList = new GraphQLObjectType({
     }
   }
 })
-
+function fnName(path: string) {
+  const exp = /\/api\/(.*)/.exec(path);
+  const [, name] = exp || [];
+  return name;
+}
 const router = express.Router();
+router.post(/\/api\/*/, function(req, res) {
+  const { query, fields } = req.body.query || {};
+  const queryString = Object.entries(query || {}).reduce((str, [key, value]) => {
+    return str + `${key}: "${value}",`;
+  }, '')
+  const schema = {
+    name: fnName(req.path),
+    query: queryString,
+    fields: fields.join(','),
+  };
+  const schemaStr = `{${schema.name}${schema.query ? `(${schema.query})`: ''}{${schema.fields}}}`;
+  console.log('schema', schemaStr)
+  graphql(Schema, schemaStr).then(({ data })=> {
+    return response(res, 200, 200, '查询成功', data.getColumns)
+  })
+})
 
 router.get('/user/logout', (req, res) => {
 	req.session.username = null;
@@ -144,9 +164,10 @@ router.get('/article/getColumns', function(req, res) {
 
 router.post('/columns/list', function(req, res) {
   console.log('request: ', req.body)
-  graphql(Schema, req.body.query).then(({ data })=>
-    response(res, 200, 200, '查询成功', data.getColumns)
-  )
+  graphql(Schema, req.body.query).then(({ data })=> {
+    console.log('router/index.ts:148', data)
+    return response(res, 200, 200, '查询成功', data.getColumns)
+  })
   // console.log('req:', req)
   // graphqlHTTP({ schema })(req, res).then(data => console.log('data:', data));
   // response(res, 200, 200, '查询成功', column);
